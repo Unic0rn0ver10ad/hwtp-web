@@ -97,6 +97,21 @@ body {
   margin-bottom: 1.5rem;
 }
 
+.status-message {
+  min-height: 1.5rem;
+  margin: 0 0 1rem 0;
+  text-align: center;
+  font-size: 0.95rem;
+}
+
+.status-success {
+  color: #2e7d32;
+}
+
+.status-error {
+  color: #c62828;
+}
+
 .length-control {
   display: flex;
   align-items: center;
@@ -331,6 +346,8 @@ input[type="range"]::-moz-range-thumb {
                 <button id="copy-button" class="custom-button">Copy</button>
             </div>
 
+            <p id="copy-status" class="status-message" role="status" aria-live="polite"></p>
+
             <div class="length-control">
                 <div class="length-input-container">
                     <label id="length-label" for="pp-chars" class="length-label">Length:</label>
@@ -380,10 +397,12 @@ class PassphraseGenerator {
         this.generateButton = document.getElementById('generate-button');
         this.copyButton = document.getElementById('copy-button');
         this.resultElement = document.getElementById('result');
+        this.copyStatus = document.getElementById('copy-status');
         this.lengthInput = document.getElementById('pp-chars');
         this.lengthSlider = document.getElementById('pp-slider');
         this.numbersCheckbox = document.getElementById('numbers-checkbox');
         this.specialCharsCheckbox = document.getElementById('specialchars-checkbox');
+        this.copyStatusTimer = null;
 
         this.setupEventListeners();
         this.initializePassphrase();
@@ -503,15 +522,74 @@ class PassphraseGenerator {
 
         // Event listener for Copy button
         this.copyButton.addEventListener('click', () => {
-            const passphrase = this.resultElement.textContent;
-            navigator.clipboard.writeText(passphrase).then(() => {
+            const passphrase = this.resultElement.textContent.trim();
+
+            const showStatus = (message, isError = false) => {
+                if (!this.copyStatus) {
+                    return;
+                }
+
+                if (this.copyStatusTimer) {
+                    clearTimeout(this.copyStatusTimer);
+                }
+
+                this.copyStatus.textContent = message;
+                this.copyStatus.classList.remove('status-success', 'status-error');
+                this.copyStatus.classList.add(isError ? 'status-error' : 'status-success');
+
+                this.copyStatusTimer = setTimeout(() => {
+                    this.copyStatus.textContent = '';
+                    this.copyStatus.classList.remove('status-success', 'status-error');
+                    this.copyStatusTimer = null;
+                }, 2500);
+            };
+
+            if (!passphrase) {
+                showStatus('Generate a passphrase to copy first.', true);
+                return;
+            }
+
+            const handleSuccess = () => {
                 this.copyButton.textContent = 'Copied!';
+                showStatus('Passphrase copied to clipboard!');
                 setTimeout(() => {
                     this.copyButton.textContent = 'Copy';
                 }, 1000);
-            }).catch(err => {
-                console.error('Could not copy text: ', err);
-            });
+            };
+
+            const handleFailure = (message) => {
+                showStatus(message, true);
+            };
+
+            if (navigator.clipboard?.writeText) {
+                navigator.clipboard.writeText(passphrase)
+                    .then(handleSuccess)
+                    .catch(err => {
+                        console.error('Could not copy text: ', err);
+                        handleFailure('Copy failed. Please try again or copy manually.');
+                    });
+            } else {
+                const selection = window.getSelection();
+                const range = document.createRange();
+                range.selectNodeContents(this.resultElement);
+                selection.removeAllRanges();
+                selection.addRange(range);
+
+                let success = false;
+                try {
+                    success = document.execCommand('copy');
+                } catch (err) {
+                    console.error('Fallback copy failed: ', err);
+                }
+
+                selection.removeAllRanges();
+
+                if (success) {
+                    handleSuccess();
+                } else {
+                    handleFailure('Copy unsupported. Press Ctrl+C or ⌘+C to copy manually.');
+                }
+            }
         });
 
         // Event listener for Regenerate Passphrase button
