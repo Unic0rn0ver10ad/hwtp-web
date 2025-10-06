@@ -86,6 +86,7 @@ body {
   font-weight: bold;
   width: 100%;
   box-sizing: border-box;
+  margin-bottom: 1.5rem;
 }
 
 .button-row {
@@ -93,6 +94,7 @@ body {
   gap: 10px;
   align-items: center;
   justify-content: center;
+  margin-bottom: 1.5rem;
 }
 
 .length-control {
@@ -308,11 +310,11 @@ input[type="range"]::-moz-range-thumb {
             <img src="hwtp.png" alt="Password Character" class="logo" onerror="this.style.display='none'">
             <h1 class="heading">Halt! What's the Passphrase?</h1>
 
-            <div class="mb-6">
+            <div>
                 <div id="result" class="passphrase-text"></div>
             </div>
 
-            <div class="button-row mb-6">
+            <div class="button-row">
                 <button id="generate-button" class="custom-button">Regenerate Passphrase</button>
                 <button id="copy-button" class="custom-button">Copy</button>
             </div>
