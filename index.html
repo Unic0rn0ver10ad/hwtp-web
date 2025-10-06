@@ -447,16 +447,6 @@ class PassphraseGenerator {
         });
     }
 
-    styleSpecialComponent(component) {
-        if (!isNaN(component)) {
-            // Number: style in blue
-            return `<span style="color: blue;">${component}</span>`;
-        } else {
-            // Special character: style in red
-            return `<span style="color: red;">${component}</span>`;
-        }
-    }
-
     setupEventListeners() {
         const generateAndDisplayPassphrase = () => {
             const length = parseInt(this.lengthInput.value, 10);
