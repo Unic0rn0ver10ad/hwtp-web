@@ -126,6 +126,18 @@ body {
   margin-left: 20px;
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 input[type="range"] {
   -webkit-appearance: none;
   width: 100%;
@@ -321,10 +333,11 @@ input[type="range"]::-moz-range-thumb {
 
             <div class="length-control">
                 <div class="length-input-container">
-                    <label for="pp-chars" class="length-label">Length:</label>
-                    <input type="number" id="pp-chars" name="chars" value="20" min="10" max="50" class="length-input">
+                    <label id="length-label" for="pp-chars" class="length-label">Length:</label>
+                    <input type="number" id="pp-chars" name="chars" value="20" min="10" max="50" class="length-input" aria-labelledby="length-label">
                 </div>
-                <input type="range" id="pp-slider" min="10" max="50" value="20" class="length-slider">
+                <label for="pp-slider" class="sr-only">Length:</label>
+                <input type="range" id="pp-slider" min="10" max="50" value="20" class="length-slider" aria-labelledby="length-label">
             </div>
 
             <div class="checkbox-container">
