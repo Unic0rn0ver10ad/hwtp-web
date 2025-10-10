@@ -1,5 +1,10 @@
 ## Happy Cybersecurity Awareness Month!
 
+<img src="hwtp.png" alt="Halt! What's the Passphrase?" width="300">
+
+[![License: Unlicense](https://img.shields.io/badge/license-Unlicense-blue.svg)](http://unlicense.org/)
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+
 **Halt! What's the Passphrase? Web** is a browser-based passphrase generator that creates strong, memorable passphrases of exactly the length you choose (10 – 50 characters). It uses the Web Crypto API for true randomness, and lets you sprinkle in numbers or special characters. HWTP is not the usual smash‑lots‑of‑random‑words‑together-and-call-it-a-passphrase passphrase generator!
 
 HWTP Web is based on [Halt! What's the Passphrase Python CLI on GitHub.](https://github.com/Unic0rn0ver10ad/halt-whats-the-passphrase)
